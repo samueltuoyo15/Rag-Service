@@ -18,7 +18,7 @@ Get started with these simple steps:
     *   🔑  Set your Gemini API key:
 
         ```bash
-        export GEMINI_API_KEY=YOUR_API_KEY
+        GEMINI_API_KEY=YOUR_API_KEY
         ```
 
 3.  **Run the Service**:

@@ -1,0 +1,10 @@
+Hello this is a test file 
+
+A test file 
+Samuel Testing File
+
+
+I love Golang i write both JavaScript, Typescript and Golang
+
+Golang is a compiled static typed programming language that is fast and simple to work with
+u ca build suff cool stuff with Golang 
