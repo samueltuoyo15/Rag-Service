@@ -78,3 +78,7 @@ func uploadHandler(w http.ResponseWriter, r *http.Request){
     }
   }`, content)
 }
+
+
+
+
