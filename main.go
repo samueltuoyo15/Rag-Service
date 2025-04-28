@@ -5,16 +5,17 @@ import (
   "log"
   "net/http"
   "os"
+  "io"
   "path/filepath"
   )
 
 const (
-  port = :8080,
+  port = ":8080"
   uploadDir = "./data"
   )
 
 func main(){
-  _ = os.MakeDir(uploadDir, 0755)
+  _ = os.Mkdir(uploadDir, 0755)
   http.HandleFunc("/api/upload", uploadHandler)
   fmt.Printf("API is running on http://localhost:%s\n", port)
   log.Fatal(http.ListenAndServe(port, nil))
@@ -44,7 +45,7 @@ func uploadHandler(w http.ResponseWriter, r *http.Request){
   }
   
   // to save the file
-  filePath := filePath.Join(uploadDir, "sample"+filepath.Ext(header.Filename))
+  filePath := filepath.Join(uploadDir, "sample"+filepath.Ext(header.Filename))
   out, err := os.Create(filePath)
   if err != nil{
     http.Error(w, "Internal Server Error", http.StatusInternalServerError)
@@ -52,26 +53,23 @@ func uploadHandler(w http.ResponseWriter, r *http.Request){
   }
   defer out.Close()
   
-  _, err := io.Copy(out, file)
-  if err != nil{
+  if _, err = io.Copy(out, file); err != nil{
     http.Error(w, "Internal Server Error", http.StatusInternalServerError)
     return
   }
   
   // process rag
-  content, err := processFileWithRag(filePath, question)
+  content, err := ProcessFileWithRAG(filePath, question)
   if err != nil{
     http.Error(w, "Rag Processing Failed", http.StatusInternalServerError)
     return
   }
-  
-  _, = os.Remove(filePath)
 
   if err := os.Remove(filePath); err != nil {
     log.Printf("Warning: failed to remove file: %v", err)
   }
   w.Header().Set("Content-Type", "application/json")
-  fmt.Printf(w, `{
+  fmt.Fprintf(w, `{
     "message": "Content has been generated successfully",
     "data":{
       "content" %q
